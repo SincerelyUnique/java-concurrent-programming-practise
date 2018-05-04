@@ -70,7 +70,7 @@ root     30215 29445  0 11:10 pts/0    00:00:00 grep 15122
 [root@i-2431501A games]# vi /usr/local/tomcat-zzbx-8888//conf/server.xml 
 ```
 
-修改maxThreads属性值
+修改Tomcat线程池中maxThreads属性值，改变线程数量
 
 ```sbtshell
     <Executor name="tomcatThreadPool" namePrefix="catalina-exec-"
