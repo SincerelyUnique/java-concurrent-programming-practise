@@ -84,3 +84,71 @@ waiting线程少了，系统上下文切换的次数就会少，因为每次从w
 
 
 ## 1.2 死锁
+
+>代码参考：DeadLockDemo.java
+
+1. 编译该类，并运行
+
+```sbtshell
+[root@jalenchu test]# echo $PATH
+/usr/local/jalen/jdk/jdk1.8.0_161/bin:/usr/local/jalen/maven/apache-maven-3.5.3/bin:/usr/local/jalen/jdk/jdk1.8.0_161:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+[root@jalenchu test]# ls
+DeadLockDemo.java
+[root@jalenchu test]# javac DeadLockDemo.java 
+[root@jalenchu test]# ls
+DeadLockDemo$1.class  DeadLockDemo$2.class  DeadLockDemo.class  DeadLockDemo.java
+[root@jalenchu test]# java DeadLockDemo
+
+```
+
+2. 输出dump文件
+
+```sbtshell
+[root@jalenchu test]# jps
+26950 Jps
+26938 DeadLockDemo
+[root@jalenchu test]# sudo -u root /usr/local/jalen/jdk/jdk1.8.0_161/bin/jstack 26938 > /usr/local/test/dump17
+[root@jalenchu test]# ls
+DeadLockDemo$1.class  DeadLockDemo$2.class  DeadLockDemo.class  DeadLockDemo.java  dump17
+[root@jalenchu test]# 
+
+```
+
+3. 查看dump文件，会发现两个线程死锁
+
+```sbtshell
+"Thread-1" #9 prio=5 os_prio=0 tid=0x00007f28880ef800 nid=0x6945 waiting for monitor entry [0x00007f288c63f000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+        at DeadLockDemo$2.run(DeadLockDemo.java:49)
+        - waiting to lock <0x00000000e34713b0> (a java.lang.String)
+        - locked <0x00000000e34713e0> (a java.lang.String)
+        at java.lang.Thread.run(Thread.java:748)
+
+"Thread-0" #8 prio=5 os_prio=0 tid=0x00007f28880ee000 nid=0x6944 waiting for monitor entry [0x00007f288c740000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+        at DeadLockDemo$1.run(DeadLockDemo.java:38)
+        - waiting to lock <0x00000000e34713e0> (a java.lang.String)
+        - locked <0x00000000e34713b0> (a java.lang.String)
+        at java.lang.Thread.run(Thread.java:748)
+```
+
+4. 避免死锁的几个方法：
+
+* 避免一个线程同时获取多个锁；
+* 避免一个线程在锁内同时占用多个资源，尽量保证每个锁只占用一个资源；
+* 尝试使用定时锁，使用lock.tryLock(timeout)来替代使用内部锁机制；
+* 对于数据库锁，加锁和解锁必须在一个数据库连接里，否则会出现解锁失败的问题；
+
+
+
+
+
+## 1.3 资源限制的挑战
+
+1. 资源限制是指在并发编程时，程序的执行速度受限于计算机硬件资源或软件资源，如带宽限制；
+
+2. 在资源受限情况下，如将串行代码并发执行，因为增加了上下文切换和资源调度的时间，反而会变慢，此时不如直接使用单线程；
+
+3. 对于硬件资源限制，可以使用集群，不同的机器处理不同的数据，如可以将“数据%机器数”计算得到一个机器编号，由对应编号的机器处理该数据；
+
+4. 对于软件资源限制，可以使用资源池复用资源，如使用连接池将数据库和Socket连接复用；
