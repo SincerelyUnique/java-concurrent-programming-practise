@@ -14,7 +14,7 @@
 
 ![Java内存模型的抽象结构示意图](images/1.jpg) 
 
-<div align=center><img width="150" height="150" src="https://img-blog.csdn.net/20161028230559575"/></div>
+<div align=center><img width="150" height="150" src="images/1.jpg"/></div>
 
 8. 线程之间的通信图：
 
