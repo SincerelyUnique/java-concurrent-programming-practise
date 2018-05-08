@@ -117,3 +117,13 @@
 
 3. 可以通过分析ReentrantLock类源码了解锁内存语义的具体实现机制，公平锁重点看tryAcquire()方法和tryRelease()方法，非公平锁可以看CAS实现；
 4. ReentrantLock分为公平锁和非公平锁，参看源码，他们的调用轨迹是不相同的；
+5. 公平锁和非公平锁的内存语义总结：
+
+* 公平锁和非公平锁释放时，最后都要写一个volatile变量state；
+* 公平锁获取时，首先回去读volatile变量；
+* 非公平锁获取时，首先会用CAS更新volatile变量，这个操作同时具有volatile读和volatile写的内存语义；
+
+6. Java concurrent包实现基石：volatile变量的读/写和CAS共同实现的线程之间的通信；
+7. Java concurrent并发包的实现示意图：
+
+<div align=center><img src="images/10.png" alt="concurrent并发包的实现示意图"/></div>
