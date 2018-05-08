@@ -12,9 +12,7 @@
 
 >线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读/写共享变量的副本
 
-![Java内存模型的抽象结构示意图](images/1.jpg) 
-
-<div align=center><img src="images/1.jpg"/></div>
+<div align=center><img src="images/1.jpg" alt="Java内存模型的抽象结构示意图"/></div>
 
 8. 线程之间的通信图：
 
