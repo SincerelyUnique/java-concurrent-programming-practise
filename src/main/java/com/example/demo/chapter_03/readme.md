@@ -106,7 +106,7 @@
 <div align=center><img src="images/9.png" alt="共享变量的状态示意图"/></div>
 
 
-## 锁的内存语义
+## 3.5 锁的内存语义
 
 1. 锁除了让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息；
 2. 锁的内存语义与volatile读相同：
@@ -127,3 +127,22 @@
 7. Java concurrent并发包的实现示意图：
 
 <div align=center><img src="images/10.png" alt="concurrent并发包的实现示意图"/></div>
+
+
+## 3.6 final域的内存定义
+
+1. 对final域的读和写更像是普通的变量访问；
+2. 对于final域，编译器和处理器要遵守两个重排序规则：
+
+* 在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序；
+* 初次读一个包含final域的对象的引用，与随后初次读这个final域，这两个操作之间不能重排序；
+
+> 参照代码：FinalExample.java
+
+3. 若final域为引用类型，写final域的重排序规则对编译器和处理器增加了如下约束
+
+> 在构造函数内对一个final引用的对象的成员域的写入，与随后在构造函数外把这个被构造对象的引用值赋给一个引用变量，这两个操作之间不能重排序，参照代码：FinalReferenceExample.java
+
+4. final引用不能从构造函数内“溢出”；
+
+> 参照代码：FinalReferenceEscapeExample.java
